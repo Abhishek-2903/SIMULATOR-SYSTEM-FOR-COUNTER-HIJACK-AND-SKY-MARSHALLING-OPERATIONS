@@ -1,7 +1,84 @@
+#include <Wire.h>
+#include <WiFi.h>
+#include "ESPAsyncWebServer.h"
+#include <esp_now.h>
+#include <SPIFFS.h>
+// Replace with your network credentials
+const char* ssid = "Abhishek";
+const char* password = "Anvi-2021";
+int chestu = 0;
+int shoulder = 0;
+int chestl = 0;
+
+
+float temperature_Celsius;
+float temperature_Fahrenheit;
+float Humidity;
+
+AsyncWebServer server(80);
+AsyncEventSource events("/events");
+unsigned long lastTime = 0;
+unsigned long timerDelay = 100;  // send readings timer
+//Structure example to receive data
+//Must match the sender structure
+typedef struct test_struct {
+  int id;
+    int x;
+    int y; 
+    int z;
+    
+    int readingId;
+
+} test_struct;
+
+//Create a struct_message called myData
+test_struct myData;
+
+//callback function that will be executed when data is received
+void OnDataRecv(const uint8_t * mac, const uint8_t *incomingData, int len) {
+  memcpy(&myData, incomingData, sizeof(myData));
+  if (myData.x < 70)
+  { chestu++;
+    
+  }
+if(myData.y < 70)
+  { chestl++;
+    
+  }
+ if (myData.z < 70)
+  { shoulder++;
+    
+  }
+}
+
+void getDHTReadings() {
+
+  Humidity = chestu;
+  // Read temperature as Celsius (the default)
+  temperature_Celsius = chestl;
+  // Read temperature as Fahrenheit (isFahrenheit = true)
+  temperature_Fahrenheit = shoulder;
+}
+
+String processor(const String& var) {
+  getDHTReadings();
+  //Serial.println(var);
+  if (var == "TEMPERATURE_C") {
+    return String(temperature_Celsius);
+  }
+  else if (var == "TEMPERATURE_F") {
+    return String(temperature_Fahrenheit);
+  }
+  else if (var == "HUMIDITY") {
+    return String(Humidity);
+  }
+}
+
+const char index_html[] PROGMEM = R"rawliteral(
 <!DOCTYPE html>
 <html style="font-size: 16px;" lang="en">
-
 <head>
+  <title>Home 1</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta charset="utf-8">
   <meta name="keywords" content="about studio">
@@ -11,7 +88,7 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <title>Home 1</title>
+
   <link rel="stylesheet" href="/nicepage.css?version=21e9c9e9-c454-4c87-8959-fe4fce832d42" media="screen">
   <script class="u-script" type="text/javascript" src="//capp.nicepage.com/assets/jquery-1.9.1.min.js"
     defer=""></script>
@@ -131,817 +208,9 @@
     .u-section-2 .u-text-6 {
       margin: 20px 0 0;
     }
-
-    .u-section-2 .u-image-1 {
-      width: 638px;
-      height: 733px;
-      margin: -754px calc(((100% - 1140px) / 2) + -20px) 0 auto;
-    }
-
-    .u-section-2 .u-btn-1 {
-      letter-spacing: 2px;
-      border-style: solid;
-      text-transform: uppercase;
-      font-weight: 700;
-      margin: 195px auto 60px calc(((100% - 1140px) / 2) + 17px);
-      padding: 10px 45px;
-    }
-
-    @media (max-width: 1199px) {
-      .u-section-2 .u-list-1 {
-        margin-top: -259px;
-        margin-left: calc(((100% - 940px) / 2));
-      }
-
-      .u-section-2 .u-repeater-1 {
-        grid-template-columns: 100%;
-        min-height: 566px;
-      }
-
-      .u-section-2 .u-container-layout-1 {
-        padding-top: 30px;
-        padding-bottom: 30px;
-      }
-
-      .u-section-2 .u-container-layout-2 {
-        padding-top: 30px;
-        padding-bottom: 30px;
-      }
-
-      .u-section-2 .u-container-layout-3 {
-        padding-top: 30px;
-        padding-bottom: 30px;
-      }
-
-      .u-section-2 .u-image-1 {
-        width: 638px;
-        height: 733px;
-        margin-top: -754px;
-        margin-right: calc(((100% - 940px) / 2) + 70px);
-      }
-
-      .u-section-2 .u-btn-1 {
-        margin-left: calc(((100% - 940px) / 2));
-      }
-    }
-
-    @media (max-width: 991px) {
-      .u-section-2 .u-list-1 {
-        margin-left: calc(((100% - 720px) / 2));
-      }
-
-      .u-section-2 .u-repeater-1 {
-        grid-template-columns: repeat(3, calc(33.3333% - 13.3333px));
-        min-height: 187px;
-      }
-
-      .u-section-2 .u-container-layout-3 {
-        padding-bottom: 9px;
-      }
-
-      .u-section-2 .u-image-1 {
-        margin-right: calc(((100% - 720px) / 2) + 70px);
-      }
-
-      .u-section-2 .u-btn-1 {
-        margin-left: calc(((100% - 720px) / 2));
-      }
-    }
-
-    @media (max-width: 767px) {
-      .u-section-2 {
-        min-height: 1104px;
-      }
-
-      .u-section-2 .u-list-1 {
-        margin-left: calc(((100% - 540px) / 2));
-      }
-
-      .u-section-2 .u-repeater-1 {
-        grid-template-columns: repeat(2, calc(50% - 9.99997px));
-        min-height: 422px;
-      }
-
-      .u-section-2 .u-container-layout-1 {
-        padding-left: 20px;
-        padding-right: 20px;
-      }
-
-      .u-section-2 .u-container-layout-2 {
-        padding-left: 20px;
-        padding-right: 20px;
-      }
-
-      .u-section-2 .u-container-layout-3 {
-        padding-bottom: 30px;
-        padding-left: 20px;
-        padding-right: 20px;
-      }
-
-      .u-section-2 .u-image-1 {
-        width: 540px;
-        height: 620px;
-        margin-right: calc(((100% - 540px) / 2));
-      }
-
-      .u-section-2 .u-btn-1 {
-        margin-left: calc(((100% - 540px) / 2));
-      }
-    }
-
-    @media (max-width: 575px) {
-      .u-section-2 {
-        min-height: 649px;
-      }
-
-      .u-section-2 .u-list-1 {
-        width: 340px;
-        margin-left: calc(((100% - 340px) / 2));
-      }
-
-      .u-section-2 .u-repeater-1 {
-        grid-template-columns: 100%;
-        min-height: 511px;
-      }
-
-      .u-section-2 .u-text-1 {
-        margin-right: 0;
-      }
-
-      .u-section-2 .u-text-3 {
-        margin-right: 0;
-      }
-
-      .u-section-2 .u-text-5 {
-        margin-right: 0;
-      }
-
-      .u-section-2 .u-image-1 {
-        width: 340px;
-        height: 390px;
-        margin-right: calc(((100% - 340px) / 2));
-      }
-
-      .u-section-2 .u-btn-1 {
-        margin-left: calc(((100% - 340px) / 2));
-      }
-    }
-  </style>
-  <style class="u-style">
-    .u-section-3 {
-      background-image: none;
-    }
-
-    .u-section-3 .u-sheet-1 {
-      min-height: 1029px;
-    }
-
-    .u-section-3 .u-text-1 {
-      width: 841px;
-      font-weight: 700;
-      margin: 109px auto 0;
-    }
-
-    .u-section-3 .u-list-1 {
-      margin-top: 40px;
-      margin-bottom: 60px;
-    }
-
-    .u-section-3 .u-repeater-1 {
-      grid-template-columns: repeat(3, calc(33.3333% - 20px));
-      min-height: 574px;
-      grid-gap: 30px;
-    }
-
-    .u-section-3 .u-list-item-1 {
-      background-image: none;
-      box-shadow: 5px 5px 19px 0 rgba(0, 0, 0, 0.15);
-    }
-
-    .u-section-3 .u-container-layout-1 {
-      padding: 0;
-    }
-
-    .u-section-3 .u-image-1 {
-      height: 243px;
-      margin: 10px 0 0;
-    }
-
-    .u-section-3 .u-list-item-2 {
-      box-shadow: 5px 5px 19px 0 rgba(0, 0, 0, 0.15);
-    }
-
-    .u-section-3 .u-container-layout-2 {
-      padding: 0;
-    }
-
-    .u-section-3 .u-image-2 {
-      height: 243px;
-      margin: 10px 0 0;
-    }
-
-    .u-section-3 .u-list-item-3 {
-      box-shadow: 5px 5px 19px 0 rgba(0, 0, 0, 0.15);
-    }
-
-    .u-section-3 .u-container-layout-3 {
-      padding: 0;
-    }
-
-    .u-section-3 .u-image-3 {
-      height: 243px;
-      margin: 10px 0 0;
-    }
-
-    .u-section-3 .u-list-item-4 {
-      box-shadow: 5px 5px 19px 0 rgba(0, 0, 0, 0.15);
-    }
-
-    .u-section-3 .u-container-layout-4 {
-      padding: 0;
-    }
-
-    .u-section-3 .u-image-4 {
-      height: 243px;
-      margin: 10px 0 0;
-    }
-
-    .u-section-3 .u-list-item-5 {
-      box-shadow: 5px 5px 19px 0 rgba(0, 0, 0, 0.15);
-    }
-
-    .u-section-3 .u-container-layout-5 {
-      padding: 0;
-    }
-
-    .u-section-3 .u-image-5 {
-      height: 243px;
-      margin: 10px 0 0;
-    }
-
-    .u-section-3 .u-list-item-6 {
-      box-shadow: 5px 5px 19px 0 rgba(0, 0, 0, 0.15);
-    }
-
-    .u-section-3 .u-container-layout-6 {
-      padding: 0;
-    }
-
-    .u-section-3 .u-image-6 {
-      height: 243px;
-      margin: 10px 0 0;
-    }
-
-    @media (max-width: 1199px) {
-      .u-section-3 .u-repeater-1 {
-        grid-template-columns: repeat(3, calc(33.333333333333336% - 20px));
-        min-height: 473px;
-      }
-
-      .u-section-3 .u-container-layout-1 {
-        padding: 30px;
-      }
-
-      .u-section-3 .u-image-1 {
-        height: 201px;
-        margin-right: initial;
-        margin-left: initial;
-      }
-
-      .u-section-3 .u-container-layout-2 {
-        padding: 30px;
-      }
-
-      .u-section-3 .u-image-2 {
-        height: 201px;
-        margin-right: initial;
-        margin-left: initial;
-      }
-
-      .u-section-3 .u-container-layout-3 {
-        padding: 30px;
-      }
-
-      .u-section-3 .u-image-3 {
-        height: 201px;
-        margin-right: initial;
-        margin-left: initial;
-      }
-
-      .u-section-3 .u-container-layout-4 {
-        padding: 30px;
-      }
-
-      .u-section-3 .u-image-4 {
-        height: 201px;
-        margin-right: initial;
-        margin-left: initial;
-      }
-
-      .u-section-3 .u-container-layout-5 {
-        padding: 30px;
-      }
-
-      .u-section-3 .u-image-5 {
-        height: 201px;
-        margin-right: initial;
-        margin-left: initial;
-      }
-
-      .u-section-3 .u-container-layout-6 {
-        padding: 30px;
-      }
-
-      .u-section-3 .u-image-6 {
-        height: 201px;
-        margin-right: initial;
-        margin-left: initial;
-      }
-    }
-
-    @media (max-width: 991px) {
-      .u-section-3 .u-text-1 {
-        width: 720px;
-      }
-
-      .u-section-3 .u-repeater-1 {
-        grid-template-columns: repeat(2, calc(50% - 15px));
-        min-height: 815px;
-      }
-
-      .u-section-3 .u-image-1 {
-        height: 231px;
-        margin-right: initial;
-        margin-left: initial;
-      }
-
-      .u-section-3 .u-image-2 {
-        height: 231px;
-        margin-right: initial;
-        margin-left: initial;
-      }
-
-      .u-section-3 .u-image-3 {
-        height: 231px;
-        margin-right: initial;
-        margin-left: initial;
-      }
-
-      .u-section-3 .u-image-4 {
-        height: 231px;
-        margin-right: initial;
-        margin-left: initial;
-      }
-
-      .u-section-3 .u-image-5 {
-        height: 231px;
-        margin-right: initial;
-        margin-left: initial;
-      }
-
-      .u-section-3 .u-image-6 {
-        height: 231px;
-        margin-right: initial;
-        margin-left: initial;
-      }
-    }
-
-    @media (max-width: 767px) {
-      .u-section-3 .u-text-1 {
-        width: 540px;
-      }
-
-      .u-section-3 .u-container-layout-1 {
-        padding-left: 20px;
-        padding-right: 20px;
-      }
-
-      .u-section-3 .u-image-1 {
-        height: 347px;
-        margin-right: initial;
-        margin-left: initial;
-      }
-
-      .u-section-3 .u-container-layout-2 {
-        padding-left: 20px;
-        padding-right: 20px;
-      }
-
-      .u-section-3 .u-image-2 {
-        height: 347px;
-        margin-right: initial;
-        margin-left: initial;
-      }
-
-      .u-section-3 .u-container-layout-3 {
-        padding-left: 20px;
-        padding-right: 20px;
-      }
-
-      .u-section-3 .u-image-3 {
-        height: 347px;
-        margin-right: initial;
-        margin-left: initial;
-      }
-
-      .u-section-3 .u-container-layout-4 {
-        padding-left: 20px;
-        padding-right: 20px;
-      }
-
-      .u-section-3 .u-image-4 {
-        height: 347px;
-        margin-right: initial;
-        margin-left: initial;
-      }
-
-      .u-section-3 .u-container-layout-5 {
-        padding-left: 20px;
-        padding-right: 20px;
-      }
-
-      .u-section-3 .u-image-5 {
-        height: 347px;
-        margin-right: initial;
-        margin-left: initial;
-      }
-
-      .u-section-3 .u-container-layout-6 {
-        padding-left: 20px;
-        padding-right: 20px;
-      }
-
-      .u-section-3 .u-image-6 {
-        height: 347px;
-        margin-right: initial;
-        margin-left: initial;
-      }
-    }
-
-    @media (max-width: 575px) {
-      .u-section-3 .u-text-1 {
-        width: 340px;
-      }
-
-      .u-section-3 .u-repeater-1 {
-        grid-template-columns: 100%;
-      }
-
-      .u-section-3 .u-container-layout-1 {
-        padding-left: 10px;
-        padding-right: 10px;
-      }
-
-      .u-section-3 .u-image-1 {
-        height: 218px;
-        margin-right: initial;
-        margin-left: initial;
-      }
-
-      .u-section-3 .u-container-layout-2 {
-        padding-left: 10px;
-        padding-right: 10px;
-      }
-
-      .u-section-3 .u-image-2 {
-        height: 218px;
-        margin-right: initial;
-        margin-left: initial;
-      }
-
-      .u-section-3 .u-container-layout-3 {
-        padding-left: 10px;
-        padding-right: 10px;
-      }
-
-      .u-section-3 .u-image-3 {
-        height: 218px;
-        margin-right: initial;
-        margin-left: initial;
-      }
-
-      .u-section-3 .u-container-layout-4 {
-        padding-left: 10px;
-        padding-right: 10px;
-      }
-
-      .u-section-3 .u-image-4 {
-        height: 218px;
-        margin-right: initial;
-        margin-left: initial;
-      }
-
-      .u-section-3 .u-container-layout-5 {
-        padding-left: 10px;
-        padding-right: 10px;
-      }
-
-      .u-section-3 .u-image-5 {
-        height: 218px;
-        margin-right: initial;
-        margin-left: initial;
-      }
-
-      .u-section-3 .u-container-layout-6 {
-        padding-left: 10px;
-        padding-right: 10px;
-      }
-
-      .u-section-3 .u-image-6 {
-        height: 218px;
-        margin-right: initial;
-        margin-left: initial;
-      }
-    }
-  </style>
-  <style class="u-style">
-    .u-section-4 {
-      background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("//images01.nicepage.com/c461c07a441a5d220e8feb1a/f98302a52a475c17a482c9c6/-min.jpg?version=");
-      background-position: 50% 50%;
-    }
-
-    .u-section-4 .u-sheet-1 {
-      min-height: 741px;
-    }
-
-    .u-section-4 .u-text-1 {
-      font-size: 4.5rem;
-      width: 764px;
-      margin: 60px auto 0;
-    }
-
-    .u-section-4 .u-text-2 {
-      font-style: italic;
-      width: 894px;
-      margin: 20px auto 0;
-    }
-
-    .u-section-4 .u-table-1 {
-      margin-top: 30px;
-      margin-bottom: 0;
-      margin-left: 0;
-    }
-
-    .u-block-3c3f-49 {
-      border-style: dotted;
-    }
-
-    .u-block-3c3f-48 {
-      border-style: dotted;
-    }
-
-    .u-section-4 .u-table-header-1 {
-      background-image: none;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      font-weight: 400;
-    }
-
-    .u-section-4 .u-table-cell-1 {
-      padding: 10px 20px;
-    }
-
-    .u-section-4 .u-table-cell-2 {
-      padding: 10px 20px;
-    }
-
-    .u-section-4 .u-table-cell-3 {
-      padding: 10px 20px;
-    }
-
-    .u-section-4 .u-table-cell-4 {
-      padding: 10px 20px;
-    }
-
-    .u-section-4 .u-table-body-1 {
-      background-image: none;
-    }
-
-    .u-section-4 .u-table-cell-5 {
-      border-style: dotted;
-      padding: 10px 20px;
-    }
-
-    .u-section-4 .u-table-cell-6 {
-      border-style: dotted;
-      padding: 10px 20px;
-    }
-
-    .u-section-4 .u-table-cell-7 {
-      border-style: dotted;
-      padding: 10px 20px;
-    }
-
-    .u-section-4 .u-table-cell-8 {
-      border-style: dotted;
-      padding: 10px 20px;
-    }
-
-    .u-section-4 .u-table-cell-9 {
-      border-style: dotted;
-      padding: 10px 20px;
-    }
-
-    .u-section-4 .u-table-cell-10 {
-      border-style: dotted;
-      padding: 10px 20px;
-    }
-
-    .u-section-4 .u-table-cell-11 {
-      border-style: dotted;
-      padding: 10px 20px;
-    }
-
-    .u-section-4 .u-table-cell-12 {
-      border-style: dotted;
-      padding: 10px 20px;
-    }
-
-    .u-section-4 .u-table-cell-13 {
-      border-style: dotted;
-      padding: 10px 20px;
-    }
-
-    .u-section-4 .u-table-cell-14 {
-      border-style: dotted;
-      padding: 10px 20px;
-    }
-
-    .u-section-4 .u-table-cell-15 {
-      border-style: dotted;
-      padding: 10px 20px;
-    }
-
-    .u-section-4 .u-table-cell-16 {
-      border-style: dotted;
-      padding: 10px 20px;
-    }
-
-    .u-section-4 .u-table-cell-17 {
-      border-style: dotted;
-      padding: 10px 20px;
-    }
-
-    .u-section-4 .u-table-cell-18 {
-      border-style: dotted;
-      padding: 10px 20px;
-    }
-
-    .u-section-4 .u-table-cell-19 {
-      border-style: dotted;
-      padding: 10px 20px;
-    }
-
-    .u-section-4 .u-table-cell-20 {
-      border-style: dotted;
-      padding: 10px 20px;
-    }
-
-    .u-section-4 .u-table-cell-21 {
-      border-style: dotted;
-      padding: 10px 20px;
-    }
-
-    .u-section-4 .u-table-cell-22 {
-      border-style: dotted;
-      padding: 10px 20px;
-    }
-
-    .u-section-4 .u-table-cell-23 {
-      border-style: dotted;
-      padding: 10px 20px;
-    }
-
-    .u-section-4 .u-table-cell-24 {
-      border-style: dotted;
-      padding: 10px 20px;
-    }
-
-    .u-section-4 .u-table-cell-25 {
-      border-style: dotted;
-      padding: 10px 20px;
-    }
-
-    .u-section-4 .u-table-cell-26 {
-      border-style: dotted;
-      padding: 10px 20px;
-    }
-
-    .u-section-4 .u-table-cell-27 {
-      border-style: dotted;
-      padding: 10px 20px;
-    }
-
-    .u-section-4 .u-table-cell-28 {
-      border-style: dotted;
-      padding: 10px 20px;
-    }
-
-    .u-block-3c3f-35 {
-      background-image: none;
-    }
-
-    .u-block-3c3f-42 {
-      padding: 10px 20px;
-    }
-
-    .u-block-3c3f-43 {
-      padding: 10px 20px;
-    }
-
-    .u-block-3c3f-44 {
-      padding: 10px 20px;
-    }
-
-    .u-block-3c3f-45 {
-      padding: 10px 20px;
-    }
-
-    .u-section-4 .u-text-3 {
-      width: 657px;
-      margin: 30px auto 59px;
-    }
-
-    .u-section-4 .u-btn-1 {
-      border-style: none none solid;
-      padding: 0;
-    }
-
-    @media (max-width: 1199px) {
-      .u-section-4 .u-sheet-1 {
-        min-height: 611px;
-      }
-
-      .u-section-4 .u-table-1 {
-        margin-left: initial;
-      }
-    }
-
-    @media (max-width: 991px) {
-      .u-section-4 .u-sheet-1 {
-        min-height: 468px;
-      }
-
-      .u-section-4 .u-text-1 {
-        width: 720px;
-      }
-
-      .u-section-4 .u-text-2 {
-        width: 720px;
-      }
-    }
-
-    @media (max-width: 767px) {
-      .u-section-4 .u-sheet-1 {
-        min-height: 926px;
-      }
-
-      .u-section-4 .u-text-1 {
-        font-size: 3.4375rem;
-        width: auto;
-        margin-top: 6px;
-        margin-left: 0;
-        margin-right: 0;
-      }
-
-      .u-section-4 .u-text-2 {
-        width: 540px;
-      }
-
-      .u-section-4 .u-text-3 {
-        width: 540px;
-        margin-bottom: 6px;
-      }
-    }
-
-    @media (max-width: 575px) {
-      .u-section-4 .u-sheet-1 {
-        min-height: 681px;
-      }
-
-      .u-section-4 .u-text-1 {
-        font-size: 1.875rem;
-        margin-top: 55px;
-      }
-
-      .u-section-4 .u-text-2 {
-        width: 340px;
-      }
-
-      .u-section-4 .u-text-3 {
-        width: 340px;
-        margin-bottom: 55px;
-      }
-    }
   </style>
 
-  <script type="application/ld+json">{
-		"@context": "http://schema.org",
-		"@type": "Organization",
-		"name": "WebSite2454295",
-		"url": "/",
-		"sameAs": []
-}</script>
+  
   <meta name="theme-color" content="#2e10dd">
   <meta property="og:title" content="Home 1">
   <meta property="og:description" content="">
@@ -951,40 +220,36 @@
 </head>
 
 <body>
+  <div class="w3-container w3-teal">
+    <b>
+      <h1 style="font-size:300%; font-family:Arial, Helvetica, sans-serif; text-align:center; color:white ;">
+        SIMULATOR SYSTEM FOR COUNTER HIJACK AND SKY MARSHALLING OPERATIONS</h1>
+    </b>
 
-  <section class="u-clearfix u-image u-section-2" id="carousel_6697" data-image-width="2000" data-image-height="1333">
-    <b> <h1 style="font-size:300%; font-family:Arial, Helvetica, sans-serif; text-align:center; color: rgba(69, 13, 62, 0.8);">SIMULATOR SYSTEM FOR COUNTER HIJACK AND SKY MARSHALLING OPERATIONS</h1></b>
+  </div>
+  <section class="u-clearfix u-image u-section-2" id="carousel_6697" data-image-width="2000" data-image-height="1433">
+
     <div class="u-expanded-width u-grey-10 u-shape u-shape-rectangle u-shape-1"></div>
     <div class="u-list u-list-1">
       <div class="u-repeater u-repeater-1">
         <div
           class="u-align-right u-bottom--radius-20 u-bottom-right-radius-20 u-container-style u-gradient u-list-item u-repeater-item u-shape-round u-list-item-1">
           <div class="u-container-layout u-similar-container u-container-layout-1">
-            <h5 class="u-text u-text-body-alt-color u-text-1"><span class="u-file-icon u-icon u-text-white"><img
-                  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAYAAADDPmHLAAAAAXNSR0IArs4c6QAABIZJREFUeF7t3eGu2yAMhuHl/i+6UyPlKE3SYsAG27z7MU0aI4XvqSGk69n+Kf96vV4vSZfbtm2SdrSxnQG1EKTBX4cDBNuAS72rAGgN//zigFCKyubvuwFohH8MDQQ2If/qtQuAZvggGB/++4rNACzCB8F4BE0ALMMHwVgE1QBGhA+CcQiqAIwMHwRjEIgBzAgfBPYIRABmhg8CWwRFAB7CB4Edgp8APIUPAhsEXwF4DB8E+ggeAXgOHwS6CG4AIoQPAj0EHwAihQ8CHQR/ACKGD4J+BCkA7E+1+IRRk4YdQOR3/3nUIKg3kAoAlQAA+wxQCeQQtizl/zpkEMgQAEA2T2lbpQXAUiAzCwDZPKVtBYC00coGlhoAy0AZAQDKc5S6BQBSx1seHADKc5S6BQBSx1seHADKc5S6RWoAHAeX7QKgPEepWwAgdbzlwaX7PMAxZMp/Ofz9oOz9W7ZHwoQvCz8lAMKXh58OAOHXhf8HIMMyQPj14acAQPBtwf9tlo8/RNsIEnxf8DcAUZYBgtcJPiQAwtcN/2MP4L0CEL5++DcAnhEAYGEAhG8TfpgKAICBALwtA4RvF/5jBQCA7YR76939t4RRAWzJAMB2ft337v6LIqkAtoYAYDu/7nt3/13BVABbQ+4B7LcqfAOYmYIiAA+3hQAwy1/2Q6M8fFYABDYIRBWAKmAz+R56BYCHFCa+BjEAqsDElAwvXQUABIZJTOoaAJMm3stlqwFQBbxEp/M6mgDMRsAtoU74+yFba1ezzwZA0Jrc579rBjC7CnBEDACeESgY6KoAVAGFBCZ30Q0ABJMT7Ly8CgAQdKYw8Z+nARBtU1i6ixp1l6MGwEMViICgFPy1GFhDUAUAgu+1vDb4URDUAYDgjqA3/KNHi2qQFoCX5UArfCsEJgC8VAEPCLQBaI/JDAAIbL+AU2s5MAWwOgKLd/95h6GBYBkAVmvot32/dfha4zEH4KkKaE2a5OBuFIDePcEQAKshGBl+L+phADwi6H33PFWCGeH3IBgKwCsCLQgzw29FMByAZwQ9EDyE34JgCgDvCGoheAq/FsE0ABEQ/JpMj6Ff9ySSc4KpACIhkNz6eWxTQjAdAAjs2fxC4AIACOYhAID93Lu5wlMlcAOAKjDGyRWBKwAgGI/AHYBjCiLcZo2Jy+YqRyVwC4BqYBP89WzDNQAQ2CNwDwAExghsu9frnT2B3lyeewpRAdgY2oT/7jUUAJYDfQjhAIBAF0FIACDQQxAWAAh0EIQGwOawH0EKAFSDdghpAICgDUEqACwJdQjeD4RSAqAayCCkBgCC3whCPA6WOS634jnCfY6WAkA1+ARwXvrT7gGe6gKV4P4zGJcCsPpdgvtPBZdXc70Wq1WDb3d8S1aAM6MVIIT4n0F67+22nrJCKJ31LF8BMleDUvjvsQPgoWBkqAaS8AFQWC2iQpCGDwDhdiEShJrwASAEEOX8oDZ8AFQC8AyhJXwANALwBqE1fAB0AvAAoSd8ACgBmHWW0Bs+AAwAjMCgEfzxOjkIMkagBUIz9PNr+g8mF0B3A7oPWQAAAABJRU5ErkJggg=="
-                  alt=""></span>&nbsp;Call Us
-            </h5>
-            <p class="u-text u-text-body-alt-color u-text-2">1 (234) 567-891,<br>1 (234) 987-654
+
+            <p class="u-text u-text-body-alt-color u-text-2">ABOUT GUN
             </p>
           </div>
         </div>
         <div
           class="u-align-right u-bottom-right-radius-20 u-bottom-right-radius-80 u-container-style u-gradient u-list-item u-repeater-item u-shape-round u-list-item-2">
           <div class="u-container-layout u-similar-container u-container-layout-2">
-            <h5 class="u-text u-text-body-alt-color u-text-3"><span class="u-file-icon u-icon u-text-white"><img
-                  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAYAAADDPmHLAAAAAXNSR0IArs4c6QAABJhJREFUeF7tndF2m0AMROP//2j3OI2b1AGzsBppRjt5DWCkubq74J709tH4536/3yPKu91ut4jrMF6jVWFRgR8F1QkIeQCyQt+DQh0GWQCqg38FQhUEOQDYglcHQQYA9uBVQaAHQC14NRCoAVAP/wkD8/6AFoAu4bNDQAdAt+DZlwQqALqHz2gDGgBWCZ8NAgoAVgufCYJyAFYNnwWCUgBWD58BAgNw9NVfwu8r3xOUAeDp/5+sKghKAHD421qpgCAdAIf/fk3JhsAAJKzxZz6iNQCe/jEUMiFIM4DDHws/+9FwKQBGJ4sB1tF7PYfV76NTAKhs6Gwjle99BI62AMwG/9q8ChCia9gCAg5AduPQTetWTysA0OE/JygTAnRNbQBAN6pqSUDXBQUga1LQTdrbTHWoTx6AqvAzlwNkjdIAIBsz8giVBQGyThgAGXpENoYJgMe9oGqVBQDVkDPB/zwWDTyqXgNwNfGX8wxAYkNQ0zDLAhICVM2SBkA1wwDMduDrfMVJCCr9Q612iAHUmhAV/uM6arUbgMj0DcDfbqpNQSQDarVLGYB185f1RRGifgMQOf7gTbABEPmLnahlwAAYgHBjh18QuQlETABgBYBtghH1GwAAAV4Cgv5K9+a/YiVfBlDho74SljIAqgmREjAAfhEU8n8UZNnPBogcf0H4IQAgnwSYlwE1/X/2MngA/l1OsRmzvVCsWRIARgsgw0fWawBmxx78/v95e4iXQLJLALopZ5lAT7+kAdAbQRYIlMOHGiALAOR0HJkgI3x0fbA9QCYA6CZtgZAVPro2KABdIegSPnwJyAYAPS0d64EboKJpCBAypz5zg9sWgKgmVgQfde9Hm9iUJeB5E5WNvGIEtfsdCXvrmBQDVC0DV5vCcB7qzd9rbWkAGIJxrLLCT10CDIAB+OxA9do6HkPNkZnTn24AA3AMVXsADME+BNnhlxjAABgA7wU2GKiY/jID2AK/CVgOAEPwDUFV+KUGeJa/+mNhZfgG4PipDH7E8gCsvBRUh09hAAMAl8zbD0j9Mujdnay2F2CYfhoDrGgBA7Chg1UswBI+lQFWsoABeLMZ6G4BpvDpDND95RBb+AYg+QnMAJxoeLelgDF8WgN03BAagBPT320vwBo+tQE6WcAAXJj+LhZgDp/eAB0sYAAmpl/dAuzhSxhAFQKF8A1AgJ32LmEAAM1VeTmkEr6UAZQ2hAYAMP0qewGl8OUMoGABAwCcfnYLqIUvaQBmCxiAhOlntYBi+LIGYINANXwDEGQsAxDUyCuXqX45pBy+vAEYNoQG4MrYBp9TZQH18FsYoNICBiB4kmcul22BDuG3MUCFBQzAzLiCzs2yQJfwWxkg0wIGADTBEZdFW6BT+O0MgH5F3C18A3BSOQbgZMMqD49eCjqG39YAiA2hAagc54ufHWWBruG3NkCkBQzAxQlkOG3WAp3Db2+ACAsYAIYxnryHqxboHv4SBrj6cmiF8A3AG7MYgEntMp4+uhSsEv5SBjizITQAjOMbdE9HFlgp/OUMMGIBAxA0acyX2bPAauEvaYC9x8IVw3/04g+DhaSf6cOtvAAAAABJRU5ErkJggg=="
-                  alt=""></span>&nbsp;Location
-            </h5>
-            <p class="u-text u-text-body-alt-color u-text-4">121 Rock Sreet, 21 Avenue, New York, NY 92103-9000</p>
+
+            <p class="u-text u-text-body-alt-color u-text-4">About vest</p>
           </div>
         </div>
         <div
           class="u-align-left u-bottom-left-radius-20 u-bottom-right-radius-20 u-container-style u-gradient u-list-item u-repeater-item u-shape-round u-list-item-3">
           <div class="u-container-layout u-similar-container u-container-layout-3">
-            <h5 class="u-text u-text-body-alt-color u-text-5"><span class="u-file-icon u-icon u-text-white"><img
-                  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAYAAADDPmHLAAAAAXNSR0IArs4c6QAABLBJREFUeF7tnduS6yAMBE/+/6NzKsk6F19AAiSEZvY1tsuo24OMk/XtX7K/+/1+txzS7Xa7WR7f+9jLD8YaeA3I6kIsJ8Bs4NmEWEKA6NCvpFghHUILsCr4vRCRRQgpQBbwK4gQSoCs4COLEEIAFPARRZgqACr4SCJMEYDgz+8bZjSL7gIQfnklwVsCNwEIvraE9Pu5lwguAhC+Dv62tYcE5gIQfht8LwnMBCD4PvBedwomAhD+WPiWaTBcAMK3gW8lwVABCN8WvoUEwwQgfB/4oyUYIgDh+8IfKUG3AIQ/B/4oCboEIPy58EdI0CwA4ceA3ysBBYjFsflsWpeNmwTg1d/MyXTHFgnUAhC+KcPug2slUAlA+N18XA6gkQBagK1Q2cQ2ESBTka4KhDDGw1NGSSYhFQZprA/2oikAqShIYxUJgFaQR1GQxlxNAKRibNMh0piLAmQqxDPuhP/cAWncFOCkC6YAyeZB7QOTbAKU0u8yAZCKsA8BpLGfCpCxAMg9QCkBKQBAD6ASIOvVzwR4abC/EzokAAXItRB0WPvf3Qr/CJAZPhPgo8J3ClAAoB7grBegABTgVYHs8c8p4Nf0bRp4JwAF+BQIqRYUAHAK+E5DCkABMOZ/9gBH0x99wDMBEOY8CkABYL8QcjLLvZeFmQCgPcCWiDeU+OcUcJ4DFAA4AZ4XBRPgaABUTaAGC/qt4KsmkAlwURmoiwJqsEyAg/LsAdgE2r5qtTT/eH+G+ssg9gB/FaAAJ8vB7AF4G2j6tm3vmC/GHZtANoESIaFSEWqwTAAmABPgtwJcBwBfDaQAhUhAmB6hBNB8J2DzIrsEFEDQFGSWAE6AlhR47JNVAkgBKMEn9mAFoAQvCaAFoAQU4HUVCFcIv/vFLD0BfAJsUFElgPphSO2OD00CuN8G1gRAmw4owIURKElAAQqRgCDBW4DMK12S2L/aJrMEkP8jqEWGrBJQAIUNGSWgAAoBMt4dHARgH1A3IksSwP6r2Dri+hYZJKAAdc7FLVaX4FIATgNyM1aVAPp9AXK8si1XlKAqAFNABn/Fp4hnwkK9M0iHVr71KkkgFoApIIe/ShJcSQr13kA9Vt0e2iTw/FaRWgCmgA5+SxJ4CVASE+rdwW1I9XtJkyC8AEwBPXxNEngIUJOxmAAUoF2A2gMkD/i1c3h+Lhmi18lKzmXFbfZXoVc9a1c/BVjRJsU5DxOAU4Gi6kE2lcAXJ8A2Jq/oClLDZU9DCp8CLIu4fOJmAnAqiG+MBr46ATgVxBZAC79ZACZBPBFa4FOAeBybz8hdAKZAM6vhO7bC70oA9gPDOTYdsAf+EAGYBE3chuzUC3+YAJRgCE/VQUbAHyoAJVDx69p4FPzhAlCCLq6inUfCNxGAEog4Nm00Gr6ZAJSgiW9xJwv4pgLwNnGMBFbgt7MTfSOodyh8jNxWQWv4LgnAJIgL31UAiiATweOq/z4TlylgP3ROCecyeMOfkgDfQ6cIr2rMAO/aBNbCD1WEmeBDCYDWH0QAH1KA7CJEAh9agGwiRAS/hACrixAZ/FICrHTnsAL06esAtbsCzeez7yBWA76v7ZSFIA3glm2tpFgd9lkt/wO/kBxObkZ/8AAAAABJRU5ErkJggg=="
-                  alt=""></span>&nbsp;Hours
-            </h5>
             <p class="u-text u-text-body-alt-color u-text-6">Mon – Fri …… 11 am – 8 pm, Sat, Sun&nbsp;&nbsp;…… 6 am – 8
               pm</p>
           </div>
@@ -998,9 +263,8 @@
       </div>
     </div>
   </section>
-
   <!-- First Photo Grid-->
-  <div class="w3-row-padding">
+  <div class="w3-row-padding w3-margin-top">
     <div class="w3-third w3-container w3-margin-bottom">
       <img src="https://images.mid-day.com/images/images/2022/feb/armykerala_d.jpg" alt="Norway" style="width:100%"
         class="w3-hover-opacity">
@@ -1027,7 +291,6 @@
       </div>
     </div>
   </div>
-
   <!-- Second Photo Grid-->
   <div class="w3-row-padding">
     <div class="w3-third w3-container w3-margin-bottom">
@@ -1059,10 +322,7 @@
   <div class="w3-container w3-grey w3-padding-32">
     <h1>TRAINING RECORDS</h1>
     <table id="customers">
-
-
-
-      <tbody>
+ <tbody>
         <tr>
           <th>SOLDIER </th>
           <th>NO.OF BULLETTS HIT BY ANOTHER TEAM </th>
@@ -1071,19 +331,19 @@
         </tr>
         <tr>
           <td>Squadron Commander A </td>
-          <td>4</td>
-          <td>10</td>
-          <td>15</td>
+          <td><span class="reading"><span id="temp_celcius"></span></span></td>
+          <td><span class="reading"><span id="temp_fahrenheit"> </span></span></td>
+          <td><span class="reading"><span id="hum"> </span> </span></td>
         </tr>
         <tr>
           <td>Squadron Commander B </td>
-          <td>4</td>
-          <td>10</td>
-          <td>15</td>
+          <td><span class="reading"><span id="hgum"></span> </span></td>
+          <td><span class="reading"><span id="t2"></span> </span></td>
+          <td><span class="reading"><span id="h2"></span> </span></td>
         </tr>
         <tr>
           <td>Squadron Commander C </td>
-          <td>14</td>
+          <td><span class="reading"><span id="k2"> </span> </span></td>
           <td>20</td>
           <td>15</td>
         </tr>
@@ -1111,47 +371,123 @@
 
       </tbody>
     </table>
-
-
-
-    <!-- Code injected by live-server -->
-    <script type="text/javascript">
-      // <![CDATA[  <-- For SVG support
-      if ('WebSocket' in window) {
-        (function () {
-          function refreshCSS() {
-            var sheets = [].slice.call(document.getElementsByTagName("link"));
-            var head = document.getElementsByTagName("head")[0];
-            for (var i = 0; i < sheets.length; ++i) {
-              var elem = sheets[i];
-              var parent = elem.parentElement || head;
-              parent.removeChild(elem);
-              var rel = elem.rel;
-              if (elem.href && typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet") {
-                var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
-                elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
-              }
-              parent.appendChild(elem);
-            }
-          }
-          var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
-          var address = protocol + window.location.host + window.location.pathname + '/ws';
-          var socket = new WebSocket(address);
-          socket.onmessage = function (msg) {
-            if (msg.data == 'reload') window.location.reload();
-            else if (msg.data == 'refreshcss') refreshCSS();
-          };
-          if (sessionStorage && !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')) {
-            console.log('Live reload enabled.');
-            sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
-          }
-        })();
-      }
-      else {
-        console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
-      }
-	// ]]>
-    </script>
 </body>
-
 </html>
+  <script>
+  if (!!window.EventSource) {
+   var source = new EventSource('/events');
+  
+   source.addEventListener('open', function(e) {
+    console.log("Events Connected");
+   }, false);
+   source.addEventListener('error', function(e) {
+    if (e.target.readyState != EventSource.OPEN) {
+      console.log("Events Disconnected");
+    }
+   }, false);
+  
+   source.addEventListener('message', function(e) {
+    console.log("message", e.data);
+   }, false);
+  
+   source.addEventListener('temperature_Celsius', function(e) {
+    console.log("temperature", e.data);
+    document.getElementById("temp_celcius").innerHTML = e.data;
+   }, false);
+  
+   source.addEventListener('temperature_Fahrenheit', function(e) {
+    console.log("temperature", e.data);
+    document.getElementById("temp_fahrenheit").innerHTML = e.data;
+   }, false);
+   source.addEventListener('humidity', function(e) {
+    console.log("humidity", e.data);
+    document.getElementById("hum").innerHTML = e.data;
+   }, false);
+
+   source.addEventListener('humidity', function(e) {
+    console.log("humidity", e.data);
+    document.getElementById("hgum").innerHTML = e.data;
+   }, false);
+
+   source.addEventListener('humidity', function(e) {
+    console.log("humidity", e.data);
+    document.getElementById("t2").innerHTML = e.data;
+   }, false);
+
+   source.addEventListener('humidity', function(e) {
+    console.log("humidity", e.data);
+    document.getElementById("h2").innerHTML = e.data;
+   }, false);
+
+   source.addEventListener('humidity', function(e) {
+    console.log("humidity", e.data);
+    document.getElementById("k2").innerHTML = e.data;
+   }, false);
+  
+  }
+  </script>
+  </body>
+  </html>)rawliteral";
+
+void setup() {
+  Serial.begin(115200);
+
+  WiFi.begin(ssid, password);
+  WiFi.mode(WIFI_STA);
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(1000);
+    Serial.println("Setting as a Wi-Fi Station..");
+  }
+  Serial.print("Station IP Address: ");
+  Serial.println(WiFi.localIP());
+  Serial.println();
+  //Init ESP-NOW
+  if (esp_now_init() != ESP_OK) {
+    Serial.println("Error initializing ESP-NOW");
+    return;
+  }
+  if (!SPIFFS.begin()) {
+    Serial.println("An Error has occurred while mounting SPIFFS");
+    return;
+  }
+
+  // Once ESPNow is successfully Init, we will register for recv CB to
+  // get recv packer info
+  esp_now_register_recv_cb(OnDataRecv);
+
+  server.on("/", HTTP_GET, [](AsyncWebServerRequest * request) {
+    request->send_P(200, "text/html", index_html);
+  });
+  server.on("/Picture1", HTTP_GET, [](AsyncWebServerRequest * request) {
+    request->send(SPIFFS, "/Picture1.png", "image/png");
+  });
+  events.onConnect([](AsyncEventSourceClient * client) {
+    if (client->lastId()) {
+      Serial.printf("Client reconnected! Last message ID that it got is: %u\n", client->lastId());
+    }
+    // send event with message "hello!", id current millis
+    // and set reconnect delay to 1 second
+    client->send("hello!", NULL, millis(), 10000);
+  });
+  server.addHandler(&events);
+  server.begin();
+}
+
+void loop() {
+  if ((millis() - lastTime) > timerDelay) {
+
+    getDHTReadings();
+    Serial.printf("Temperature = %.2f  \n", temperature_Celsius);
+    Serial.printf("Temperature = %.2f  \n", temperature_Fahrenheit);
+    Serial.printf("Humidity= %f %\n", Humidity);
+    Serial.println();
+
+    // Send Events to the Web Server with the Sensor Readings
+    events.send("ping", NULL, millis());
+    events.send(String(temperature_Celsius).c_str(), "temperature_Celsius", millis());
+    events.send(String(temperature_Fahrenheit).c_str(), "temperature_Fahrenheit", millis());
+    events.send(String(Humidity).c_str(), "humidity", millis());
+
+    lastTime = millis();
+  }
+}
