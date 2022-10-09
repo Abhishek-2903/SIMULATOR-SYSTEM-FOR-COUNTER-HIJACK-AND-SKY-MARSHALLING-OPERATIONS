@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html style="font-size: 16px;" lang="en">
 <head>
   <title>Home 1</title>
@@ -191,8 +192,7 @@
         </div>
         <div class="u-align-left u-bottom-left-radius-20 u-bottom-right-radius-20 u-container-style u-gradient u-list-item u-repeater-item u-shape-round u-list-item-3">
           <div class="u-container-layout u-similar-container u-container-layout-3">
-            <p class="u-text u-text-body-alt-color u-text-6">Mon – Fri …… 11 am – 8 pm, Sat, Sun&nbsp;&nbsp;…… 6 am – 8
-              pm</p>
+            <p class="u-text u-text-body-alt-color u-text-6">MECH PHY TEAM : PROF.KC TIWARI , SAKSHAM MISHRA , ABHISHEK SINGH , PRASHANT GAUTAM</p>
           </div>
         </div>
       </div>
@@ -211,11 +211,12 @@
  
   <div class="w3-row-padding w3-margin-top">
     <div class="w3-third w3-container w3-margin-bottom">
-      <img src="https://images.mid-day.com/images/images/2022/feb/armykerala_d.jpg" alt="Norway" style="width:100%" 
+      <img src="https://images.mid-day.com/images/images/2022/feb/armykerala_d.jpg" onclick=onClick(this) alt="Norway" style="width:100%" 
         class="w3-hover-opacity">
       <div class="w3-container w3-white">
         <p><b>Squadron Commander A</b></p>
         <p>TEAM ALPHA</p>
+          <button class="w3-button w3-black w3-margin-bottom" onclick="document.getElementById('1ST PERSON').style.display='block'">CLICK HERE FOR MORE DETAILS</button>
       </div>
     </div>
     <div class="w3-third w3-container w3-margin-bottom">
@@ -224,6 +225,7 @@
       <div class="w3-container w3-white">
         <p><b>Squadron Commander B</b></p>
         <p>TEAM ALPHA</p>
+        <button class="w3-button w3-black w3-margin-bottom" onclick="document.getElementById('2ND PERSON').style.display='block'">CLICK HERE FOR MORE DETAILS</button>
       </div>
     </div>
     <div class="w3-third w3-container">
@@ -232,168 +234,391 @@
       <div class="w3-container w3-white">
         <p><b>Squadron Commander C</b></p>
         <p>TEAM ALPHA</p>
+        <button class="w3-button w3-black w3-margin-bottom" onclick="document.getElementById('3RD PERSON').style.display='block'">CLICK HERE FOR MORE DETAILS</button>
       </div>
     </div>
   </div>
-  <!-- Second Photo Grid-->
-  <div class="w3-row-padding">
+  
+   
+  <div class="w3-row-padding w3-margin-top">
     <div class="w3-third w3-container w3-margin-bottom">
-      <img src="https://images.mid-day.com/images/images/2022/feb/armykerala_d.jpg" alt="Norway" style="width:100%"
+      <img src="https://images.mid-day.com/images/images/2022/feb/armykerala_d.jpg" onclick=onClick(this) alt="Norway" style="width:100%" 
         class="w3-hover-opacity">
       <div class="w3-container w3-white">
-        <p><b>Squadron Commander D</b></p>
+        <p><b>Squadron Commander A</b></p>
         <p>TEAM BETA</p>
+          <button class="w3-button w3-black w3-margin-bottom" onclick="document.getElementById('BETA').style.display='block'">CLICK HERE FOR MORE DETAILS</button>
       </div>
     </div>
     <div class="w3-third w3-container w3-margin-bottom">
       <img src="https://images.mid-day.com/images/images/2022/feb/armykerala_d.jpg" alt="Norway" style="width:100%"
         class="w3-hover-opacity">
       <div class="w3-container w3-white">
-        <p><b>Squadron Commander E</b></p>
+        <p><b>Squadron Commander B</b></p>
         <p>TEAM BETA</p>
+        <button class="w3-button w3-black w3-margin-bottom" onclick="document.getElementById('BETA').style.display='block'">CLICK HERE FOR MORE DETAILS</button>
       </div>
     </div>
     <div class="w3-third w3-container">
       <img src="https://images.mid-day.com/images/images/2022/feb/armykerala_d.jpg" alt="Norway" style="width:100%"
         class="w3-hover-opacity">
       <div class="w3-container w3-white">
-        <p><b>Squadron Commander F</b></p>
+        <p><b>Squadron Commander C</b></p>
         <p>TEAM BETA</p>
+        <button class="w3-button w3-black w3-margin-bottom" onclick="document.getElementById('BETA').style.display='block'">CLICK HERE FOR MORE DETAILS</button>
       </div>
     </div>
   </div>
+  <div id="1ST PERSON" class="w3-modal">
+    <div class="w3-modal-content w3-animate-top w3-card-4">
+     
+        <span onclick="document.getElementById('1ST PERSON').style.display='none'" 
+       class="w3-button w3-teal w3-xlarge w3-display-topright">×</span>
+    <div class="w3-container w3-grey w3-padding-32">
+  
+        <hr id="Training Records">
+    <h1>TRAINING RECORDS</h1>
+     <h2>APLHA TEAM</h2>
+    <table id="customers">
+ <tbody>
+        <tr>
+          <th>SOLDIER </th>
+          <th>NO.OF BULLETTS HIT ON LEFT SHOULDER </th>
+          <th>NO.OF BULLETTS HIT ON RIGHT SHOULDER</th>
+          <th>NO.OF BULLETTS HIT ON LEFT CHEST </th>
+          <th>NO.OF BULLETTS HIT ON RIGHT CHEST</th>
+          <th>NO.OF BULLETTS HIT ON LEFT STOMACH </th>
+          <th>NO.OF BULLETTS HIT ON RIGHT STOMACH</th>
+         
+        </tr>
+        <tr>
+          <td>Squadron Commander A </td>
+          <td><span class="reading"><span id="a1"></span> </span></td>
+          <td><span class="reading"><span id="b1"></span> </span></td>
+          <td><span class="reading"><span id="c1"></span> </span></td>
+          <td><span class="reading"><span id="d1"></span> </span></td>
+          <td><span class="reading"><span id="e1"></span> </span></td>
+          <td><span class="reading"><span id="f1"></span> </span></td>
+         
+        </tr>
+         <tr>
+          <td>Squadron Commander B </td>
+          <td><span class="reading"><span id="a1"></span> </span></td>
+          <td><span class="reading"><span id="b1"></span> </span></td>
+          <td><span class="reading"><span id="c1"></span> </span></td>
+          <td><span class="reading"><span id="d1"></span> </span></td>
+          <td><span class="reading"><span id="e1"></span> </span></td>
+          <td><span class="reading"><span id="f1"></span> </span></td>
+         
+        </tr>
+        <tr>
+          <td>Squadron Commander C </td>
+          <td><span class="reading"><span id="a1"></span> </span></td>
+          <td><span class="reading"><span id="b1"></span> </span></td>
+          <td><span class="reading"><span id="c1"></span> </span></td>
+          <td><span class="reading"><span id="d1"></span> </span></td>
+          <td><span class="reading"><span id="e1"></span> </span></td>
+          <td><span class="reading"><span id="f1"></span> </span></td>
+         
+        </tr>
+         
+
+
+      </tbody>
+    </table>
+
+    </div>
+  </div>
+         
+        </tr>
+        <button class="w3-button w3-red w3-section" onclick="document.getElementById('1ST PERSON').style.display='none'">Close <i class="fa fa-remove"></i></button>
+        <p class="w3-right">Need <a href="#" class="w3-text-blue">help?</a></p>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Ticket Modal -->
+  <div id="2ND PERSON" class="w3-modal">
+    <div class="w3-modal-content w3-animate-top w3-card-4">
+     
+        <span onclick="document.getElementById('2ND PERSON').style.display='none'" 
+       class="w3-button w3-teal w3-xlarge w3-display-topright">×</span>
+    <div class="w3-container w3-grey w3-padding-32">
+  
+        <hr id="Training Records">
+    <h1>TRAINING RECORDS</h1>
+        <h2>APLHA TEAM</h2>
+    <table id="customers">
+ <tbody>
+        <tr>
+          <th>SOLDIER </th>
+          <th>NO.OF BULLETTS HIT ON LEFT SHOULDER </th>
+          <th>NO.OF BULLETTS HIT ON RIGHT SHOULDER</th>
+          <th>NO.OF BULLETTS HIT ON LEFT CHEST </th>
+          <th>NO.OF BULLETTS HIT ON RIGHT CHEST</th>
+          <th>NO.OF BULLETTS HIT ON LEFT STOMACH </th>
+          <th>NO.OF BULLETTS HIT ON RIGHT STOMACH</th>
+         
+        </tr>
+        <tr>
+          <td>Squadron Commander B </td>
+          <td><span class="reading"><span id="a1"></span> </span></td>
+          <td><span class="reading"><span id="b1"></span> </span></td>
+          <td><span class="reading"><span id="c1"></span> </span></td>
+          <td><span class="reading"><span id="d1"></span> </span></td>
+          <td><span class="reading"><span id="e1"></span> </span></td>
+          <td><span class="reading"><span id="f1"></span> </span></td>
+         
+        </tr>
+        <tr>
+          <td>Squadron Commander C </td>
+          <td><span class="reading"><span id="a1"></span> </span></td>
+          <td><span class="reading"><span id="b1"></span> </span></td>
+          <td><span class="reading"><span id="c1"></span> </span></td>
+          <td><span class="reading"><span id="d1"></span> </span></td>
+          <td><span class="reading"><span id="e1"></span> </span></td>
+          <td><span class="reading"><span id="f1"></span> </span></td>
+         
+        </tr>
+       
+         
+
+
+      </tbody>
+    </table>
+
+    </div>
+  </div>
+         
+        </tr>
+        <button class="w3-button w3-red w3-section" onclick="document.getElementById('2ND PERSON').style.display='none'">Close <i class="fa fa-remove"></i></button>
+        <p class="w3-right">Need <a href="#" class="w3-text-blue">help?</a></p>
+      </div>
+    </div>
+  </div>
+  
+ </p>
+    </div>
+  </div>
+  
+  
+<!-- Ticket Modal -->
+  <div id="3RD PERSON" class="w3-modal">
+    <div class="w3-modal-content w3-animate-top w3-card-4">
+     
+        <span onclick="document.getElementById('3RD PERSON').style.display='none'" 
+       class="w3-button w3-teal w3-xlarge w3-display-topright">×</span>
+    <div class="w3-container w3-grey w3-padding-32">
+  
+        <hr id="Training Records">
+    <h1>TRAINING RECORDS</h1>
+     <h2>APLHA TEAM</h2>
+    <table id="customers">
+ <tbody>
+        <tr>
+          <th>SOLDIER </th>
+          <th>NO.OF BULLETTS HIT ON LEFT SHOULDER </th>
+          <th>NO.OF BULLETTS HIT ON RIGHT SHOULDER</th>
+          <th>NO.OF BULLETTS HIT ON LEFT CHEST </th>
+          <th>NO.OF BULLETTS HIT ON RIGHT CHEST</th>
+          <th>NO.OF BULLETTS HIT ON LEFT STOMACH </th>
+          <th>NO.OF BULLETTS HIT ON RIGHT STOMACH</th>
+         
+        </tr>
+        <tr>
+          <td>Squadron Commander B </td>
+          <td><span class="reading"><span id="a1"></span> </span></td>
+          <td><span class="reading"><span id="b1"></span> </span></td>
+          <td><span class="reading"><span id="c1"></span> </span></td>
+          <td><span class="reading"><span id="d1"></span> </span></td>
+          <td><span class="reading"><span id="e1"></span> </span></td>
+          <td><span class="reading"><span id="f1"></span> </span></td>
+         
+        </tr>
+        <tr>
+          <td>Squadron Commander C </td>
+          <td><span class="reading"><span id="a1"></span> </span></td>
+          <td><span class="reading"><span id="b1"></span> </span></td>
+          <td><span class="reading"><span id="c1"></span> </span></td>
+          <td><span class="reading"><span id="d1"></span> </span></td>
+          <td><span class="reading"><span id="e1"></span> </span></td>
+          <td><span class="reading"><span id="f1"></span> </span></td>
+         
+        </tr>
+        <tr>
+         
+
+
+      </tbody>
+    </table>
+
+    </div>
+  </div>
+         
+        </tr>
+        <button class="w3-button w3-red w3-section" onclick="document.getElementById('3RD PERSON').style.display='none'">Close <i class="fa fa-remove"></i></button>
+        <p class="w3-right">Need <a href="#" class="w3-text-blue">help?</a></p>
+      </div>
+    </div>
+  </div>
+  
+ </p>
+    </div>
+  </div>
+  
+  
   <!-- Subscribe section below tag is used for sidebar -->
-   
+  <div id="BETA" class="w3-modal">
+    <div class="w3-modal-content w3-animate-top w3-card-4">
+     
+        <span onclick="document.getElementById('BETA').style.display='none'" 
+       class="w3-button w3-teal w3-xlarge w3-display-topright">×</span>
+    <div class="w3-container w3-grey w3-padding-32">
+  
+        <hr id="Training Records">
+    <h1>TRAINING RECORDS</h1>
+     <h2>BETA TEAM</h2>
+    <table id="customers">
+ <tbody>
+        <tr>
+          <th>SOLDIER </th>
+          <th>NO.OF BULLETTS HIT ON LEFT SHOULDER </th>
+          <th>NO.OF BULLETTS HIT ON RIGHT SHOULDER</th>
+          <th>NO.OF BULLETTS HIT ON LEFT CHEST </th>
+          <th>NO.OF BULLETTS HIT ON RIGHT CHEST</th>
+          <th>NO.OF BULLETTS HIT ON LEFT STOMACH </th>
+          <th>NO.OF BULLETTS HIT ON RIGHT STOMACH</th>
+         
+        </tr>
+        <tr>
+          <td>Squadron Commander A </td>
+          <td><span class="reading"><span id="a1"></span> </span></td>
+          <td><span class="reading"><span id="b1"></span> </span></td>
+          <td><span class="reading"><span id="c1"></span> </span></td>
+          <td><span class="reading"><span id="d1"></span> </span></td>
+          <td><span class="reading"><span id="e1"></span> </span></td>
+          <td><span class="reading"><span id="f1"></span> </span></td>
+         
+        </tr>
+         <tr>
+          <td>Squadron Commander B </td>
+          <td><span class="reading"><span id="a1"></span> </span></td>
+          <td><span class="reading"><span id="b1"></span> </span></td>
+          <td><span class="reading"><span id="c1"></span> </span></td>
+          <td><span class="reading"><span id="d1"></span> </span></td>
+          <td><span class="reading"><span id="e1"></span> </span></td>
+          <td><span class="reading"><span id="f1"></span> </span></td>
+         
+        </tr>
+        <tr>
+          <td>Squadron Commander C </td>
+          <td><span class="reading"><span id="a1"></span> </span></td>
+          <td><span class="reading"><span id="b1"></span> </span></td>
+          <td><span class="reading"><span id="c1"></span> </span></td>
+          <td><span class="reading"><span id="d1"></span> </span></td>
+          <td><span class="reading"><span id="e1"></span> </span></td>
+          <td><span class="reading"><span id="f1"></span> </span></td>
+         
+        </tr>
+         
+
+
+      </tbody>
+    </table>
+
+    </div>
+  </div>
+         
+        </tr>
+        <button class="w3-button w3-red w3-section" onclick="document.getElementById('BETA').style.display='none'">Close <i class="fa fa-remove"></i></button>
+        <p class="w3-right">Need <a href="#" class="w3-text-blue">help?</a></p>
+      </div>
+    </div>
+  </div>
+  
+  
+  
   <div class="w3-container w3-grey w3-padding-32">
-  <hr id="Training Records">
+  
+        <hr id="Training Records">
     <h1>TRAINING RECORDS</h1>
     <table id="customers">
  <tbody>
         <tr>
           <th>SOLDIER </th>
-          <th>NO.OF BULLETTS HIT BY ANOTHER TEAM </th>
-          <th>NO OF BULLET MISSED</th>
-          <th>NO.OF BULLETTS FIRED</th>
+          <th>NO.OF BULLETTS FIRED ON SOLDIER </th>
+          <th>NO.OF BULLETTS HIT ON SOLDIER</th>
+          <th>NO.OF BULLETTS MISSED  </th>
+          
+         
         </tr>
         <tr>
           <td>Squadron Commander A </td>
-          <td><span class="reading"><span id="temp_celcius"></span></span></td>
-          <td><span class="reading"><span id="temp_fahrenheit"> </span></span></td>
-          <td><span class="reading"><span id="hum"> </span> </span></td>
+          <td><span class="reading"><span id="a1"></span> </span></td>
+          <td><span class="reading"><span id="b1"></span> </span></td>
+          <td><span class="reading"><span id="c1"></span> </span></td>
+         
+         
         </tr>
         <tr>
           <td>Squadron Commander B </td>
-          <td><span class="reading"><span id="hgum"></span> </span></td>
-          <td><span class="reading"><span id="t2"></span> </span></td>
-          <td><span class="reading"><span id="h2"></span> </span></td>
+         <td><span class="reading"><span id="a2"></span> </span></td>
+          <td><span class="reading"><span id="b2"></span> </span></td>
+          <td><span class="reading"><span id="c2"></span> </span></td>
+          <t
         </tr>
         <tr>
           <td>Squadron Commander C </td>
-          <td><span class="reading"><span id="k2"> </span> </span></td>
-          <td>20</td>
-          <td>15</td>
+          <td>00</td>
+          <td>00</td>
+          <td>00</td>
+         
         </tr>
         <tr>
           <td>Squadron Commander D </td>
-          <td>12</td>
-          <td>18</td>
-          <td>5</td>
+          <td>00</td>
+          <td>00</td>
+           <td>00</td>
+         
+                 
         </tr>
 
-
-        <tr>
-          <td>Squadron Commander E </td>
-          <td>00</td>
-          <td>00</td>
-          <td>30</td>
-        </tr>
-        <tr>
-          <td>Squadron Commander F </td>
-          <td>30</td>
-          <td>00</td>
-          <td>00</td>
-
-        </tr>
 
       </tbody>
     </table>
 
-
-  <script>
-  
-// Script to open and close sidebar
-function w3_open() {
-  document.getElementById("mySidebar").style.display = "block";
-}
+    </div>
+  </div>
+<script>
+if (!!window.EventSource) {
+ var source = new EventSource('/events');
  
-function w3_close() {
-  document.getElementById("mySidebar").style.display = "none";
-}
-
-  // Script to open and close sidebar
-function w3_open() {
-  document.getElementById("mySidebar").style.display = "block";
-}
- 
-function w3_close() {
-  document.getElementById("mySidebar").style.display = "none";
-}
-  if (!!window.EventSource) {
-   var source = new EventSource('/events');
-  
-   source.addEventListener('open', function(e) {
-    console.log("Events Connected");
-   }, false);
-   source.addEventListener('error', function(e) {
-    if (e.target.readyState != EventSource.OPEN) {
-      console.log("Events Disconnected");
-    }
-   }, false);
-  
-   source.addEventListener('message', function(e) {
-    console.log("message", e.data);
-   }, false);
-  
-   source.addEventListener('temperature_Celsius', function(e) {
-    console.log("temperature", e.data);
-    document.getElementById("temp_celcius").innerHTML = e.data;
-   }, false);
-  
-   source.addEventListener('temperature_Fahrenheit', function(e) {
-    console.log("temperature", e.data);
-    document.getElementById("temp_fahrenheit").innerHTML = e.data;
-   }, false);
-   source.addEventListener('humidity', function(e) {
-    console.log("humidity", e.data);
-    document.getElementById("hum").innerHTML = e.data;
-   }, false);
-
-   source.addEventListener('humidity', function(e) {
-    console.log("humidity", e.data);
-    document.getElementById("hgum").innerHTML = e.data;
-   }, false);
-
-   source.addEventListener('humidity', function(e) {
-    console.log("humidity", e.data);
-    document.getElementById("t2").innerHTML = e.data;
-   }, false);
-
-   source.addEventListener('humidity', function(e) {
-    console.log("humidity", e.data);
-    document.getElementById("h2").innerHTML = e.data;
-   }, false);
-
-   source.addEventListener('humidity', function(e) {
-    console.log("humidity", e.data);
-    document.getElementById("k2").innerHTML = e.data;
-   }, false);
-  
+ source.addEventListener('open', function(e) {
+  console.log("Events Connected");
+ }, false);
+ source.addEventListener('error', function(e) {
+  if (e.target.readyState != EventSource.OPEN) {
+    console.log("Events Disconnected");
   }
-  function w3_open() {
-  document.getElementById("mySidebar").style.display = "block";
+ }, false);
+ 
+ source.addEventListener('message', function(e) {
+  console.log("message", e.data);
+ }, false);
+ 
+ source.addEventListener('new_readings', function(e) {
+  console.log("new_readings", e.data);
+  var obj = JSON.parse(e.data);
+  document.getElementById("a"+obj.id).innerHTML = obj.shoulderleft.toFixed(2);
+  document.getElementById("b"+obj.id).innerHTML = obj.shoulderright.toFixed(2);
+  document.getElementById("c"+obj.id).innerHTML = obj.chestleft.toFixed(2);
+  document.getElementById("d"+obj.id).innerHTML = obj.chestright.toFixed(2);
+  document.getElementById("e"+obj.id).innerHTML = obj.stomachleft.toFixed(2);
+  document.getElementById("f"+obj.id).innerHTML = obj.stomachright.toFixed(2);
+  document.getElementById("rt"+obj.id).innerHTML = obj.readingId;
+  document.getElementById("rh"+obj.id).innerHTML = obj.readingId;
+ }, false);
 }
-
-function w3_close() {
-  document.getElementById("mySidebar").style.display = "none";
-}
-  </script>
+</script>
+</body>
+</html>
